@@ -199,7 +199,7 @@ def crimeLevel(crime):
     except ValueError:
         return 0  # Return 0 for non-numeric values
 
-
+#  This could also be label encoded but it works the same way
 def stateLevel(state):
     state = state.strip().upper()  # Convert state to uppercase and remove leading/trailing spaces
     if state == 'ANDHRA PRADESH':
@@ -311,10 +311,10 @@ def eduLevel(row):
 train_data = pd.read_csv("train.csv")
 
 def preprocess_data_train(data):
-    # Fill missing values
+    # Fill missing values , if any
     data.fillna(method='ffill', inplace=True)
     
-    # Encode categorical variables
+    # Encode Party
     label_encoder = LabelEncoder()
     data['Party'] = label_encoder.fit_transform(data['Party'])
    
@@ -343,7 +343,6 @@ train_data['Liabilities'] = train_data['Liabilities'].apply(convert_to_crores)
 train_data['Total Assets'] = train_data['Total Assets'].apply(convert_to_crores)
 train_data['state'] = train_data['state'].apply(stateLevel)
 
-# Create a new column 'Net Assets' by applying the function
 train_data['Total Assets'] = train_data.apply(calculate_net_assets, axis=1)
 train_data['Liabilities'] = train_data.apply(liability, axis=1)
 train_data['Constituency'] = train_data.apply(is_gen, axis=1)
@@ -358,10 +357,10 @@ train_data.to_csv("train_modified.csv", index=False)
 test_data = pd.read_csv("test.csv")
 
 def preprocess_data_test(data):
-    # Fill missing values
+    # Fill missing values, if any
     data.fillna(method='ffill', inplace=True)
     
-    # Encode categorical variables
+    # Encode Party
     label_encoder = LabelEncoder()
     data['Party'] = label_encoder.fit_transform(data['Party'])
     
@@ -374,7 +373,7 @@ test_data = preprocess_data_test(test_data)
 test_data['Liabilities'] = test_data['Liabilities'].apply(convert_to_crores)
 test_data['Total Assets'] = test_data['Total Assets'].apply(convert_to_crores)
 test_data['state'] = test_data['state'].apply(stateLevel)
-# Create a new column 'Net Assets' by applying the function
+
 test_data['Total Assets'] = test_data.apply(calculate_net_assets, axis=1)
 test_data['Liabilities'] = test_data.apply(liability, axis=1)
 test_data['Constituency'] = test_data.apply(is_gen, axis=1)
@@ -415,6 +414,7 @@ result_df = pd.DataFrame({'ID': test_data['ID'], 'Education': predictions})
 # Save the results to a new CSV file
 result_df.to_csv("submission.csv", index=False)
 
+# Code for finding the  best value of max_depth
 # # Load the modified train data
 # train_data = pd.read_csv("train_modified.csv")
 
