@@ -20,10 +20,6 @@ def calculate_net_assets(row):
     difference = row['Total Assets']
     if difference > 50:
         return 39
-    elif difference > 100:
-        return 89
-    elif difference > 300:
-        return 45
     elif difference > 45:
         return 38
     elif difference > 40:
